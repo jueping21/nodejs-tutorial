@@ -2,10 +2,10 @@ import fs from "fs";
 
 class Note {
     #fileName;
-    noteList;
+    #noteList;
     constructor(dataFile) {
         this.#fileName = dataFile;
-        this.noteList = this.#loadNote();
+        this.#noteList = this.#loadNote();
     }
 
     #loadNote() {
@@ -24,12 +24,12 @@ class Note {
     }
 
     #hasTitle(title) {
-        if (this.noteList == null) {
+        if (this.#noteList == null) {
             return -1;
         }
 
-        for (let i = 0; i < this.noteList.length; i++) {
-            if (this.noteList[i].title === title) {
+        for (let i = 0; i < this.#noteList.length; i++) {
+            if (this.#noteList[i].title === title) {
                 return i;
             }
         }
@@ -39,8 +39,8 @@ class Note {
 
     addNote(title, body) {
         if (this.#hasTitle(title) < 0) {
-            this.noteList.push({ title, body });
-            this.#saveNote(this.noteList);
+            this.#noteList.push({ title, body });
+            this.#saveNote(this.#noteList);
             return { title, body };
         }
         return null;
@@ -51,19 +51,19 @@ class Note {
         if (titleIndex < 0) {
             return null;
         }
-        let removedTitle = this.noteList[titleIndex].title;
-        let removedValue = this.noteList[titleIndex].body;
+        let removedTitle = this.#noteList[titleIndex].title;
+        let removedValue = this.#noteList[titleIndex].body;
         let removedNote = { title: removedTitle, body: removedValue };
-        let newNoteList = this.noteList.filter((note) => {
+        let newNoteList = this.#noteList.filter((note) => {
             return note.title !== title;
         });
-        this.noteList = newNoteList;
-        this.#saveNote(this.noteList);
+        this.#noteList = newNoteList;
+        this.#saveNote(this.#noteList);
         return removedNote;
     }
 
     listNote() {
-        return this.noteList;
+        return this.#noteList;
     }
 
     readNote(title) {
@@ -71,7 +71,7 @@ class Note {
         if(titleIndex < 0){
             return null;
         }else{
-            return this.noteList[titleIndex];
+            return this.#noteList[titleIndex];
         }
     }
 }
