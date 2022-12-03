@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Edit Student Information</h1>
+    <form action="/student/update" method="post">
+        <input type="hidden" name="id" value="<%= student.id %> " />
+        <div>
+            Name: <input type="text" name="name" placeholder="Name" value="<%= student.name %> "/>
+        </div>
+        <div>
+            Gender:
+            <% if(student.gender === "male") {%> 
+                <input type="radio" name="gender" value="male" checked/> Male
+            <% } else {%> 
+                <input type="radio" name="gender" value="male" /> Male
+            <% }%> 
+
+            <% if(student.gender === "female") {%> 
+                <input type="radio" name="gender" value="female" checked/> Female
+            <% } else {%> 
+                <input type="radio" name="gender" value="female" /> Female
+            <% }%> 
+        </div>
+        <div>
+            Age:
+            <input
+                type="text"
+                name="age"
+                placeholder="Age"
+                value="<%= student.age %> "
+            />
+        </div>
+        <div>
+            Address:
+            <input type="text" name="address" placeholder="Address"  value="<%= student.address %> "/>
+        </div>
+        <button type="submit">Edit</button>
+    </form>
+</body>
+</html>

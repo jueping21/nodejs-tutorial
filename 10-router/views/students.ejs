@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="./css/style.css" />
+    </head>
+    <body>
+        <h1>EJS - Embedded JavaScript templates</h1>
+
+        <% if(StudentDB && StudentDB.length > 0) { %> 
+            <table>
+                <caption>
+                    Student list
+                </caption>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                    <th>Address</th>
+                </tr>
+                
+                <% for(let s of StudentDB){ %> 
+                    <tr>
+                        <td><%=s.id %></td>
+                        <td><%=s.name %></td>
+                        <td><%=s.gender %></td>
+                        <td><%=s.age %></td>
+                        <td><%=s.address %></td>
+                        <td>
+                            <a href="/student/delete?id=<%=s.id %>" onclick="return confirm('Are you sure?')">Delete</a>
+                            <span> </span>
+                            <a href="/student/to-update?id=<%=s.id %>">Edit</a>
+                        </td>
+                    </tr>
+                <% } %>
+            </table>
+        <% } else {%>
+            <p>List is empty</p>    
+        <% } %>   
+        <hr />
+        <form action="/student/add" method="post">
+            <div>
+                Name: <input type="text" name="name" placeholder="Name" />
+            </div>
+            <div>
+                Gender:
+                <input type="radio" name="gender" value="male" /> Male
+                <input type="radio" name="gender" value="female" /> Female
+            </div>
+            <div>
+                Age:
+                <input
+                    type="text"
+                    name="age"
+                    placeholder="Age"
+                />
+            </div>
+            <div>
+                Address:
+                <input type="text" name="address" placeholder="Address" />
+            </div>
+            <button type="submit">add</button>
+        </form>
+    </body>
+</html>
