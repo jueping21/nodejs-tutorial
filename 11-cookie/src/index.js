@@ -18,11 +18,10 @@ app.get("/", (request, response) => {
 })
 
 // https://expressjs.com/en/4x/api.html#res.cookie
-
 app.post("/login", (request, response) => {
     const {username, password} = request.body;
     if(username == "admin" && password == "123"){
-        response.cookie("username", "admin", {maxAge:30000});
+        response.cookie("username", "admin");
         response.redirect("/student/list")
     }else{
         response.send("login failed")
