@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ajax</title>
+    </head>
+    <body>
+        <h1>AJAX</h1>
+        <hr />
+        <button id="btn">Click</button>
+        <div id="root"></div>
+        
+        <script>
+            const btn = document.getElementById("btn");
+            const root = document.getElementById("root");
+            btn.addEventListener("click", (event) => {
+                const xhr = new XMLHttpRequest();
+                // set response type == json
+                xhr.responseType = "json";
+                // open
+                xhr.open("GET", "http://127.0.0.1:8000/user");
+                // send
+                xhr.send();
+                // wait for the result
+                xhr.onload = function () {
+                    if (xhr.status == 200) {
+                        const result = xhr.response;
+                        if(result.status === "ok"){
+                            const ul = document.createElement("ul");
+                            root.appendChild(ul);
+                            for(let u of result.data){
+                                const li = `<li>${u.id} - ${u.name} - ${u.age} - ${u.gender} - ${u.address}</li>`
+                                ul.insertAdjacentHTML("beforeend", li);
+                            }
+                        }
+                    } else {
+                        console.log("failed");
+                    }
+                };
+            });
+        </script>
+    </body>
+</html>
