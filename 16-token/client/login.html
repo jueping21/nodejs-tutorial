@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login</title>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            td,
+            th {
+                font-size: 20px;
+                text-align: center;
+                border: 1px solid #000;
+            }
+
+            caption {
+                font-size: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Login</h1>
+        <h2 id="info"></h2>
+        <div id="root">
+            <form>
+                <div>
+                    <input id="username" type="text" />
+                </div>
+                <div>
+                    <input id="password" type="password" />
+                </div>
+                <div>
+                    <button id="login-btn" type="button">Login</button>
+                </div>
+            </form>
+        </div>
+        <script>
+            const loginBtn = document.getElementById("login-btn");
+            const root = document.getElementById("root");
+            
+            function loadData(){
+                const token = localStorage.getItem("token");
+                fetch("http://127.0.0.1:8000/user", {
+                    headers:{
+                        //format: "Bearer xxxxxx" 
+                        "authorization":`Bearer ${token}`
+                    }
+                })
+                    .then((result) => {
+                        if (result.status === 200) {
+                            return result.json();
+                        } else {
+                            throw new Error("fetch failed");
+                        }
+                    })
+                    .then((result) => {
+                        if (result.status == "ok") {
+                            const table = document.createElement("table");
+                            const dataDiv = document.getElementById("data")
+                            dataDiv.appendChild(table);
+                            table.insertAdjacentHTML(
+                                "beforeend",
+                                "<caption>User List</caption>"
+                            );
+                            table.insertAdjacentHTML(
+                                "beforeend",
+                                `
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Age</th>
+                                        <th>Gender</th>
+                                        <th>Address</th>
+                                    </tr> 
+                                </thead>
+                            `
+                            );
+                            const tbody = document.createElement("tbody");
+                            table.appendChild(tbody);
+                            for (let u of result.data) {
+                                const tr = `<tr>
+                                                <td>${u.id}</td>
+                                                <td>${u.name}</td>
+                                                <td>${u.age}</td>
+                                                <td>${u.gender}</td>
+                                                <td>${u.address}</td>
+                                            </tr>`;
+                                tbody.insertAdjacentHTML("beforeend", tr);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+
+
+            if (localStorage.getItem("id")) {
+                root.innerHTML = `
+                                <h1>Welcome ${localStorage.getItem("id")} 
+                                </h1>
+                                <hr>
+                                <button id="load-btn" onclick="loadData()">load data</button>
+                                <button onclick="localStorage.clear()">logout</button>
+                                <div id="data"></div>
+                            `;
+            } else {
+                loginBtn.onclick = () => {
+                    const username = document
+                        .getElementById("username")
+                        .value.trim();
+                    const password = document
+                        .getElementById("password")
+                        .value.trim();
+                    fetch("http://localhost:8000/login", {
+                        method: "post",
+                        headers: {
+                            "Content-type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            username,
+                            password
+                        }),
+                    })
+                        .then((result) => {
+                            return result.json();
+                        })
+                        .then((result) => {
+                            if (result.status !== "ok") {
+                                throw new Error("Login failed");
+                            }
+
+                            localStorage.setItem("token", result.data.token);
+                            localStorage.setItem("id", result.data.username);
+
+                            root.innerHTML = `   <h1>Welcome ${result.data.username} </h1>
+                                <hr>
+                                <button id="load-btn" onclick="loadData()">load data</button>
+                                <button onclick="localStorage.clear()">logout</button>
+                                <hr>
+                                <div id="data"></div>
+                            `;
+                        })
+                        .catch((error) => {
+                            document.getElementById("info").innerText = error;
+                            console.log(error);
+                        });
+                };
+            }
+        </script>
+    </body>
+</html>
