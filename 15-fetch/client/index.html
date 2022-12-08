@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ajax</title>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            td,
+            th {
+                font-size: 20px;
+                text-align: center;
+                border: 1px solid #000;
+            }
+
+            caption {
+                font-size: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>AJAX</h1>
+        <hr />
+        <button id="btn-get">Click Get</button>
+        <button id="btn-post">Click Post</button>
+        <div id="root"></div>
+
+        <script>
+            const btn1 = document.getElementById("btn-post");
+            const btn2 = document.getElementById("btn-get");
+            const root = document.getElementById("root");
+
+            btn1.addEventListener("click", (event) => {
+                fetch("http://127.0.0.1:8000/user", {
+                    method: "post",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: "CCC",
+                        age: 20,
+                        gender: "male",
+                        address: "4986 Abner Road",
+                    }),
+                });
+            });
+
+            btn2.addEventListener("click", (event) => {
+                fetch("http://127.0.0.1:8000/user")
+                    .then((result) => {
+                        if (result.status === 200) {
+                            return result.json();
+                        } else {
+                            throw new Error("fetch failed");
+                        }
+                    })
+                    .then((result) => {
+                        if (result.status == "ok") {
+                            const table = document.createElement("table");
+                            root.appendChild(table);
+                            table.insertAdjacentHTML(
+                                "beforeend",
+                                "<caption>User List</caption>"
+                            );
+                            table.insertAdjacentHTML(
+                                "beforeend",
+                                `
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Age</th>
+                                        <th>Gender</th>
+                                        <th>Address</th>
+                                    </tr> 
+                                </thead>
+                            `
+                            );
+                            const tbody = document.createElement("tbody");
+                            table.appendChild(tbody);
+                            for (let u of result.data) {
+                                const tr = `<tr>
+                                                <td>${u.id}</td>
+                                                <td>${u.name}</td>
+                                                <td>${u.age}</td>
+                                                <td>${u.gender}</td>
+                                                <td>${u.address}</td>
+                                            </tr>`;
+                                tbody.insertAdjacentHTML("beforeend", tr);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            });
+        </script>
+    </body>
+</html>

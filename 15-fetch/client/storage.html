@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Storage</h1>
+    <button id="btn01">save</button>
+    <button id="btn02">load</button>
+    <hr>
+    <script>
+        // const btn01 = document.getElementById("btn01");
+        // const btn02 = document.getElementById("btn02");    
+        btn01.onclick = ()=>{
+            console.log(sessionStorage);
+            sessionStorage.setItem("name1", "admin1")
+            sessionStorage.setItem("name2", "admin2")
+        }
+
+        btn02.onclick = ()=>{
+            const value = sessionStorage.getItem("name1")
+            console.log(value);
+        }   
+    </script>
+</body>
+</html>
